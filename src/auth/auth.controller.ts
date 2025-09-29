@@ -4,7 +4,7 @@ import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { RolesGuard } from './roles.guard';
 import { Roles } from './roles.decorator';
-import { ApiBody, ApiBearerAuth } from '@nestjs/swagger'; // ⬅️ Adicione ApiBearerAuth
+import { ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 import { LoginDto } from './dto/login.dto';
 
 @Controller('auth')
