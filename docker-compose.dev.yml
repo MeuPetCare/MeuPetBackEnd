@@ -1,0 +1,36 @@
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: MeuPet
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_HOST: db
+      DATABASE_PORT: 3306
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: root
+      DATABASE_NAME: MeuPet
+      # Opcional: define host/port para logs bonitos
+      APP_HOST: localhost
+      APP_PORT: 3000
+    volumes:
+      - .:/app            # monta o código
+      - /app/node_modules # evita sobrescrever node_modules
+    command: npm run start:dev
+
+volumes:
+  db_data:
