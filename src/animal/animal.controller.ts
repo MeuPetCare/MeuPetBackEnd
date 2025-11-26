@@ -1,11 +1,11 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
   UseGuards,
 } from '@nestjs/common';
 import { AnimalService } from './animal.service';
@@ -39,6 +39,12 @@ export class AnimalController {
   @Roles('admin', 'veterinarian')
   findOne(@Param('id') id: string) {
     return this.animalService.findOne(+id);
+  }
+
+  @Get(':id/history')
+  @Roles('admin', 'veterinarian')
+  getHistory(@Param('id') id: string) {
+    return this.animalService.getHistory(+id);
   }
 
   @Patch(':id')
