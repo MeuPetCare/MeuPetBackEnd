@@ -1,10 +1,4 @@
-import {
-  IsString,
-  IsNotEmpty,
-  IsNumber,
-  IsDateString,
-  IsOptional,
-} from 'class-validator';
+import { IsString, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateAnimalDto {
@@ -37,7 +31,6 @@ export class CreateAnimalDto {
     example: '2020-08-15',
   })
   @IsNotEmpty({ message: 'A data de nascimento é obrigatória.' })
-  @IsDateString({}, { message: 'A data de nascimento deve ser (AAAA-MM-DD).' })
   birthDate: Date;
 
   @ApiPropertyOptional({

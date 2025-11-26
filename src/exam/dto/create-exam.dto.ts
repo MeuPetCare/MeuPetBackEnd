@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString, IsDateString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateExamDto {
@@ -15,10 +15,6 @@ export class CreateExamDto {
     example: '2025-02-10',
   })
   @IsNotEmpty({ message: 'A data de solicitação é obrigatória.' })
-  @IsDateString(
-    {},
-    { message: 'A data de solicitação deve ser uma data válida (AAAA-MM-DD).' },
-  )
   requestDate: Date;
 
   @ApiProperty({

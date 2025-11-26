@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString, IsDateString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateScheduleDto {
@@ -7,13 +7,6 @@ export class CreateScheduleDto {
     example: '2025-02-10T14:30:00Z',
   })
   @IsNotEmpty({ message: 'A data e hora são obrigatórias.' })
-  @IsDateString(
-    {},
-    {
-      message:
-        'A data e hora devem ser uma data válida (AAAA-MM-DDTHH:MM:SSZ).',
-    },
-  )
   dateHour: Date;
 
   @ApiProperty({

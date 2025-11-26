@@ -10,42 +10,61 @@ import { CreateMedicalRecordDto } from './dto/create-medicalRecord.dto';
 import { UpdateMedicalRecordDto } from './dto/update-medicalRecord.dto';
 import { ScheduleService } from '../schedule/schedule.service';
 import { UserService } from '../user/user.service';
+import { CreateScheduleDto } from '../schedule/dto/create-schedule.dto';
 
 @Injectable()
 export class MedicalRecordService {
   constructor(
     @InjectRepository(MedicalRecord)
-    private medicalRecordRepository: Repository<MedicalRecord>,
-    private scheduleService: ScheduleService,
-    private userService: UserService,
+    private readonly medicalRecordRepository: Repository<MedicalRecord>,
+    private readonly scheduleService: ScheduleService,
+    private readonly userService: UserService,
   ) {}
 
   async create(
     createMedicalRecordDto: CreateMedicalRecordDto,
   ): Promise<MedicalRecord> {
-    const findSchedule = await this.scheduleService.findOne(
-      createMedicalRecordDto.scheduleId,
-    );
+    await this.userService.findOneById(createMedicalRecordDto.veterinarianId);
 
-    const findVet = await this.userService.findOneById(
-      createMedicalRecordDto.veterinarianId,
-    );
+    let scheduleId = createMedicalRecordDto.scheduleId;
 
-    const existingMedicalRecord = await this.medicalRecordRepository.findOne({
-      where: { scheduleId: createMedicalRecordDto.scheduleId },
+    if (scheduleId) {
+      await this.scheduleService.findOne(scheduleId);
+      const existingMedicalRecord = await this.medicalRecordRepository.findOne({
+        where: { scheduleId },
+      });
+      if (existingMedicalRecord) {
+        throw new BadRequestException(
+          `Já existe um medicalRecord registrado para a schedule ID ${scheduleId}.`,
+        );
+      }
+    } else {
+      if (!createMedicalRecordDto.animalId) {
+        throw new BadRequestException(
+          'Para criar um prontuário sem schedule prévia é obrigatório informar o animalId.',
+        );
+      }
+
+      const createScheduleDto: CreateScheduleDto = {
+        dateHour: new Date(),
+        reason: 'Atendimento direto gerado a partir do prontuário.',
+        animalId: createMedicalRecordDto.animalId,
+        veterinarianId: createMedicalRecordDto.veterinarianId,
+      };
+
+      const autoSchedule = await this.scheduleService.create(createScheduleDto);
+      scheduleId = autoSchedule.id;
+    }
+
+    const medicalRecord = this.medicalRecordRepository.create({
+      scheduleId,
+      anamnesis: createMedicalRecordDto.anamnesis,
+      diagnosis: createMedicalRecordDto.diagnosis,
+      treatment: createMedicalRecordDto.treatment,
+      veterinarianId: createMedicalRecordDto.veterinarianId,
     });
 
-    if (existingMedicalRecord) {
-      throw new BadRequestException(
-        `Já existe um medicalRecord registrado para a schedule ID ${createMedicalRecordDto.scheduleId}.`,
-      );
-    }
-
-    if (findSchedule && findVet) {
-      const medicalRecord =
-        this.medicalRecordRepository.create(createMedicalRecordDto);
-      return this.medicalRecordRepository.save(medicalRecord);
-    }
+    return this.medicalRecordRepository.save(medicalRecord);
   }
 
   async findAll(): Promise<MedicalRecord[]> {

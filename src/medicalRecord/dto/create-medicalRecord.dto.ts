@@ -1,14 +1,23 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateMedicalRecordDto {
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'ID da consulta relacionada',
     example: 12,
   })
-  @IsNotEmpty({ message: 'O ID da consulta é obrigatório.' })
+  @IsOptional()
   @IsNumber({}, { message: 'O ID da consulta deve ser um número.' })
-  scheduleId: number;
+  scheduleId?: number;
+
+  @ApiPropertyOptional({
+    description:
+      'ID do animal, usado quando o prontuário é criado sem uma schedule prévia',
+    example: 3,
+  })
+  @IsOptional()
+  @IsNumber({}, { message: 'O ID do animal deve ser um número.' })
+  animalId?: number;
 
   @ApiProperty({
     description: 'Anamnese realizada no atendimento',
