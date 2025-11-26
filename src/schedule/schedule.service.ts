@@ -26,14 +26,24 @@ export class ScheduleService {
 
   async findAll(): Promise<Schedule[]> {
     return this.scheduleRepository.find({
-      relations: ['animal', 'veterinarian'],
+      relations: [
+        'animal',
+        'veterinarian',
+        'medicalRecord',
+        'medicalRecord.procedures',
+      ],
     });
   }
 
   async findOne(id: number): Promise<Schedule> {
     const schedule = await this.scheduleRepository.findOne({
       where: { id },
-      relations: ['animal', 'veterinarian'],
+      relations: [
+        'animal',
+        'veterinarian',
+        'medicalRecord',
+        'medicalRecord.procedures',
+      ],
     });
     if (!schedule) {
       throw new NotFoundException(`Schedule com ID ${id} não encontrada.`);
@@ -55,6 +65,12 @@ export class ScheduleService {
     }
 
     this.scheduleRepository.merge(schedule, updateScheduleDto);
+    return this.scheduleRepository.save(schedule);
+  }
+
+  async cancel(id: number): Promise<Schedule> {
+    const schedule = await this.findOne(id);
+    schedule.status = 'Cancelada';
     return this.scheduleRepository.save(schedule);
   }
 

@@ -21,7 +21,9 @@ export class Procedure {
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   cost: number;
 
-  @ManyToOne(() => MedicalRecord, { onDelete: 'CASCADE' })
+  @ManyToOne(() => MedicalRecord, (medicalRecord) => medicalRecord.procedures, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'medicalRecordId' })
   medicalRecord: MedicalRecord;
 

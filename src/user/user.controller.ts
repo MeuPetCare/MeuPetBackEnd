@@ -6,13 +6,16 @@ import {
   Param,
   Post,
   Put,
+  Patch,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags, ApiBody } from '@nestjs/swagger';
+import * as bcrypt from 'bcrypt';
 import { UserService } from './user.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { CreateVeterinarianDto } from './dto/create-veterinarian.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateUserPasswordDto } from './dto/update-user-password.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
@@ -64,6 +67,18 @@ export class UserController {
     const updateData = { ...dto };
 
     return this.userService.update(+id, updateData);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
+  @ApiBearerAuth()
+  @Patch(':id/password')
+  async updatePassword(
+    @Param('id') id: string,
+    @Body() dto: UpdateUserPasswordDto,
+  ) {
+    const passwordHash = await bcrypt.hash(dto.password, 10);
+    return this.userService.update(+id, { passwordHash });
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

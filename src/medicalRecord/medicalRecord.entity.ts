@@ -5,9 +5,11 @@ import {
   OneToOne,
   JoinColumn,
   ManyToOne,
+  OneToMany,
 } from 'typeorm';
 import { Schedule } from '../schedule/schedule.entity';
 import { User } from '../user/user.entity';
+import { Procedure } from '../procedure/procedure.entity';
 
 @Entity()
 export class MedicalRecord {
@@ -36,6 +38,9 @@ export class MedicalRecord {
 
   @Column()
   veterinarianId: number;
+
+  @OneToMany(() => Procedure, (procedure) => procedure.medicalRecord)
+  procedures: Procedure[];
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   dateMedicalRecord: Date;

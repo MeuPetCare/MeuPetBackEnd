@@ -50,6 +50,12 @@ export class ScheduleController {
     return this.scheduleService.update(+id, updateScheduleDto);
   }
 
+  @Patch(':id/cancel')
+  @Roles('admin', 'veterinarian')
+  cancel(@Param('id') id: string) {
+    return this.scheduleService.cancel(+id);
+  }
+
   @Delete(':id')
   @Roles('admin')
   remove(@Param('id') id: string) {
