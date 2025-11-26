@@ -14,10 +14,15 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   validate(payload: any) {
-    return {
+    console.log('🎫 JWT Payload recebido:', payload);
+
+    const user = {
       userId: payload.sub,
-      username: payload.username,
+      email: payload.email,
       roles: payload.roles,
     };
+
+    console.log('👤 User retornado do validate:', user);
+    return user;
   }
 }
