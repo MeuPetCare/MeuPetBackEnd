@@ -20,7 +20,7 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin')
-  @ApiBearerAuth() // ⬅️ Adicione isso
+  @ApiBearerAuth()
   @Get('admin-profile')
   getAdminProfile(@Request() req) {
     return req.user;
@@ -28,13 +28,13 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('veterinarian')
-  @ApiBearerAuth() // ⬅️ Adicione isso
+  @ApiBearerAuth()
   @Get('vet-profile')
   getVetProfile(@Request() req) {
     return req.user;
   }
 
-  @UseGuards(JwtAuthGuard) // ⬅️ Adicione essa rota de teste
+  @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Get('test-jwt')
   testJwt(@Request() req) {

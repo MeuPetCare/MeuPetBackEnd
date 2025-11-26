@@ -1,48 +1,34 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
+import { UserService } from '../user/user.service';
+import { User } from '../user/user.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private jwtService: JwtService,
-    private userService: UserService,
+    private readonly jwtService: JwtService,
+    private readonly userService: UserService,
   ) {}
 
-  async validateUser(email: string, password: string): Promise<any> {
-    console.log('🔍 Validating user:', email);
-
+  async validateUser(
+    email: string,
+    password: string,
+  ): Promise<Omit<User, 'passwordHash'> | null> {
     const user = await this.userService.findByEmail(email);
-    console.log('👤 User found:', user ? 'YES' : 'NO');
 
-    if (!user) {
-      console.log('❌ User not found');
+    if (!user || !user.passwordHash) {
       return null;
     }
-
-    console.log('🔐 Comparing passwords...');
-    console.log('🔑 Password from request:', password);
-    console.log('🔒 Hash from database:', user.passwordHash);
 
     const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
-    console.log('✅ Password valid:', isPasswordValid);
-
     if (!isPasswordValid) {
-      console.log('❌ Invalid password');
       return null;
     }
 
-    return {
-      id: user.id,
-      email: user.email,
-      fullName: user.fullName,
-      phone: user.phone,
-      crmv: user.crmv,
-      specialty: user.specialty,
-      roles: user.roles,
-      isActive: user.isActive,
-    };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { passwordHash, ...safeUser } = user as any;
+    return safeUser;
   }
 
   login(user: any) {
