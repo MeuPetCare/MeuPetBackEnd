@@ -13,7 +13,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: dev
     ports:
       - "3000:3000"
     depends_on:
@@ -30,7 +29,7 @@ services:
     volumes:
       - .:/app            # monta o código
       - /app/node_modules # evita sobrescrever node_modules
-    command: npm run start:dev
+    command: npm run start
 
 volumes:
   db_data:
