@@ -15,7 +15,6 @@ export class AnimalService {
   ) {}
 
   async create(createAnimalDto: CreateAnimalDto): Promise<Animal> {
-    // Verifica se o tutor existe antes de criar o animal
     await this.tutorService.findOne(createAnimalDto.tutorId);
 
     const animal = this.animalRepository.create(createAnimalDto);
@@ -41,7 +40,6 @@ export class AnimalService {
     const animal = await this.findOne(id);
 
     if (updateAnimalDto.tutorId) {
-      // Verifica se o novo tutor existe
       await this.tutorService.findOne(updateAnimalDto.tutorId);
     }
 

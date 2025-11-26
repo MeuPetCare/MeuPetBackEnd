@@ -13,7 +13,7 @@ async function bootstrap() {
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  const swaggerPath = 'docs'; // mude para 'api' se preferir manter
+  const swaggerPath = 'docs';
   SwaggerModule.setup(swaggerPath, app, document);
 
   const port = Number(process.env.APP_PORT) || 3000;
