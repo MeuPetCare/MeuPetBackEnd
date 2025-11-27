@@ -22,12 +22,31 @@ import { ExamModule } from './exam/exam.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      url: process.env.DATABASE_URL,
-      entities: [User, Tutor, Animal, Schedule, MedicalRecord, Procedure, Exam], // ⬅️ NÃO ESQUEÇA ISSO!
+      host: process.env.MYSQLHOST || process.env.DATABASE_HOST || 'db',
+      port: parseInt(
+        process.env.MYSQLPORT || process.env.DATABASE_PORT || '3306',
+        10,
+      ),
+      username:
+        process.env.MYSQLUSER || process.env.DATABASE_USERNAME || 'root',
+      password:
+        process.env.MYSQLPASSWORD || process.env.DATABASE_PASSWORD || 'root',
+      database:
+        process.env.MYSQLDATABASE || process.env.DATABASE_NAME || 'MeuPet',
+      entities: [User, Tutor, Animal, Schedule, MedicalRecord, Procedure, Exam],
       synchronize: process.env.NODE_ENV !== 'production',
-      ssl: false,
+      ssl:
+        process.env.DATABASE_SSL === 'true'
+          ? {
+              rejectUnauthorized: false,
+              minVersion: 'TLSv1.2',
+            }
+          : false,
       extra: {
-        connectionLimit: 5,
+        connectionLimit: 10,
+        connectTimeout: 60000,
+        acquireTimeout: 60000,
+        timeout: 60000,
       },
     }),
     AuthModule,
