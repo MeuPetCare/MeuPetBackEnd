@@ -22,22 +22,10 @@ import { ExamModule } from './exam/exam.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: process.env.MYSQLHOST || process.env.DATABASE_HOST || 'db',
-      port: parseInt(
-        process.env.MYSQLPORT || process.env.DATABASE_PORT || '3306',
-        10,
-      ),
-      username:
-        process.env.MYSQLUSER || process.env.DATABASE_USERNAME || 'root',
-      password:
-        process.env.MYSQLPASSWORD || process.env.DATABASE_PASSWORD || 'root',
-      database:
-        process.env.MYSQLDATABASE || process.env.DATABASE_NAME || 'MeuPet',
-      entities: [User, Tutor, Animal, Schedule, MedicalRecord, Procedure, Exam],
+      url: process.env.DATABASE_URL,
+      entities: [User, Tutor, Animal, Schedule, MedicalRecord, Procedure, Exam], // ⬅️ NÃO ESQUEÇA ISSO!
       synchronize: process.env.NODE_ENV !== 'production',
-      // Remova SSL temporariamente
       ssl: false,
-      // Configurações simplificadas
       extra: {
         connectionLimit: 5,
       },
