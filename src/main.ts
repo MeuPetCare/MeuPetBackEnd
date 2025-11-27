@@ -9,6 +9,13 @@ import {
 import { Reflector } from '@nestjs/core';
 
 async function bootstrap() {
+  console.log('DB CONFIG:', {
+    host: process.env.MYSQLHOST,
+    port: process.env.MYSQLPORT,
+    user: process.env.MYSQLUSER,
+    db: process.env.MYSQLDATABASE,
+  });
+
   const app = await NestFactory.create(AppModule);
 
   app.enableCors();

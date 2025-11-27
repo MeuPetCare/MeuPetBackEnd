@@ -22,32 +22,13 @@ import { ExamModule } from './exam/exam.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: process.env.MYSQLHOST || process.env.DATABASE_HOST || 'db',
-      port: parseInt(
-        process.env.MYSQLPORT || process.env.DATABASE_PORT || '3306',
-        10,
-      ),
-      username:
-        process.env.MYSQLUSER || process.env.DATABASE_USERNAME || 'root',
-      password:
-        process.env.MYSQLPASSWORD || process.env.DATABASE_PASSWORD || 'root',
-      database:
-        process.env.MYSQLDATABASE || process.env.DATABASE_NAME || 'MeuPet',
+      host: process.env.MYSQLHOST,
+      port: parseInt(process.env.MYSQLPORT || '3306', 10),
+      username: process.env.MYSQLUSER,
+      password: process.env.MYSQLPASSWORD,
+      database: process.env.MYSQLDATABASE,
       entities: [User, Tutor, Animal, Schedule, MedicalRecord, Procedure, Exam],
-      synchronize: process.env.NODE_ENV !== 'production',
-      ssl:
-        process.env.DATABASE_SSL === 'true'
-          ? {
-              rejectUnauthorized: false,
-              minVersion: 'TLSv1.2',
-            }
-          : false,
-      extra: {
-        connectionLimit: 10,
-        connectTimeout: 60000,
-        acquireTimeout: 60000,
-        timeout: 60000,
-      },
+      synchronize: true, //como é um projeto de estudo, manter true para facilitar o desenvolvimento
     }),
     AuthModule,
     TutorModule,
