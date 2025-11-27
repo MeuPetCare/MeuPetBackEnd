@@ -88,16 +88,4 @@ export class UserController {
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);
   }
-
-  @Post('setup-first-admin')
-  async setupFirstAdmin() {
-    const passwordHash = await bcrypt.hash('senha', 10);
-    return this.userService.create({
-      email: 'admin@meupet.com',
-      passwordHash,
-      fullName: 'Administrador',
-      roles: ['admin'],
-      isActive: true,
-    });
-  }
 }

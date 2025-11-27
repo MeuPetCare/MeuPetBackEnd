@@ -115,19 +115,4 @@ export class UserService {
       throw new NotFoundException(`Usuário com ID ${id} não encontrado.`);
     }
   }
-
-  async create(data: Partial<User>): Promise<User> {
-    const existing = await this.usersRepository.findOne({
-      where: { email: data.email },
-    });
-
-    if (existing) {
-      throw new BadRequestException(
-        'Já existe um usuário cadastrado com esse e-mail.',
-      );
-    }
-
-    const user = this.usersRepository.create(data);
-    return this.usersRepository.save(user);
-  }
 }
