@@ -11,7 +11,8 @@ import { Reflector } from '@nestjs/core';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Validação e transformação global
+  app.enableCors();
+
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
@@ -36,11 +37,14 @@ async function bootstrap() {
   const swaggerPath = 'docs';
   SwaggerModule.setup(swaggerPath, app, document);
 
-  const port = Number(process.env.APP_PORT) || 3000;
+  const port = Number(process.env.PORT) || Number(process.env.APP_PORT) || 3000;
   await app.listen(port, '0.0.0.0');
 
+  const isProduction = process.env.NODE_ENV === 'production';
   const host = process.env.APP_HOST || 'localhost';
-  const base = `http://${host}:${port}`;
+  const protocol = isProduction ? 'https' : 'http';
+  const base = `${protocol}://${host}:${port}`;
+
   Logger.log(`✅ MeuPet rodando em: ${base}`);
   Logger.log(`📘 Swagger UI: ${base}/${swaggerPath}`);
   Logger.log(`🩺 OpenAPI JSON: ${base}/${swaggerPath}-json`);
