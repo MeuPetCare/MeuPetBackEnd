@@ -35,18 +35,11 @@ import { ExamModule } from './exam/exam.module';
         process.env.MYSQLDATABASE || process.env.DATABASE_NAME || 'MeuPet',
       entities: [User, Tutor, Animal, Schedule, MedicalRecord, Procedure, Exam],
       synchronize: process.env.NODE_ENV !== 'production',
-      ssl:
-        process.env.DATABASE_SSL === 'true'
-          ? {
-              rejectUnauthorized: false,
-              minVersion: 'TLSv1.2',
-            }
-          : false,
+      // Remova SSL temporariamente
+      ssl: false,
+      // Configurações simplificadas
       extra: {
-        connectionLimit: 10,
-        connectTimeout: 60000,
-        acquireTimeout: 60000,
-        timeout: 60000,
+        connectionLimit: 5,
       },
     }),
     AuthModule,
