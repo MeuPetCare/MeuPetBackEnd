@@ -37,8 +37,17 @@ import { ExamModule } from './exam/exam.module';
       synchronize: process.env.NODE_ENV !== 'production',
       ssl:
         process.env.DATABASE_SSL === 'true'
-          ? { rejectUnauthorized: false }
+          ? {
+              rejectUnauthorized: false,
+              minVersion: 'TLSv1.2',
+            }
           : false,
+      extra: {
+        connectionLimit: 10,
+        connectTimeout: 60000,
+        acquireTimeout: 60000,
+        timeout: 60000,
+      },
     }),
     AuthModule,
     TutorModule,
