@@ -10,6 +10,8 @@ import { User } from './user.entity';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { CreateVeterinarianDto } from './dto/create-veterinarian.dto';
 
+const DEFAULT_PASSWORD = 'MeuPet2025!';
+
 @Injectable()
 export class UserService {
   constructor(
@@ -42,6 +44,7 @@ export class UserService {
         'specialty',
         'roles',
         'isActive',
+        'mustChangePassword',
       ],
     });
   }
@@ -82,7 +85,8 @@ export class UserService {
       );
     }
 
-    const passwordHash = await bcrypt.hash(dto.password, 10);
+    // Usa senha padrão para veterinários
+    const passwordHash = await bcrypt.hash(DEFAULT_PASSWORD, 10);
 
     const user = this.usersRepository.create({
       email: dto.email,
@@ -93,6 +97,7 @@ export class UserService {
       specialty: dto.specialty,
       roles: ['veterinarian'],
       isActive: true,
+      mustChangePassword: true, // Força alteração de senha no primeiro login
     });
 
     return this.usersRepository.save(user);

@@ -28,6 +28,7 @@ export class ScheduleService {
     return this.scheduleRepository.find({
       relations: [
         'animal',
+        'animal.tutor', // Inclui o tutor do animal
         'veterinarian',
         'medicalRecord',
         'medicalRecord.procedures',
@@ -40,6 +41,7 @@ export class ScheduleService {
       where: { id },
       relations: [
         'animal',
+        'animal.tutor', // Inclui o tutor do animal
         'veterinarian',
         'medicalRecord',
         'medicalRecord.procedures',

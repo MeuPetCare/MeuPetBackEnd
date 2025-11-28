@@ -6,6 +6,8 @@ import { Schedule } from '../schedule/schedule.entity';
 import { MedicalRecord } from '../medicalRecord/medicalRecord.entity';
 import { Procedure } from '../procedure/procedure.entity';
 import { Exam } from '../exam/exam.entity';
+import { AddMustChangePasswordColumn1704067200000 } from '../migrations/1704067200000-AddMustChangePasswordColumn';
+import { AddMedicalRecordIdToExam1704067300000 } from '../migrations/1704067300000-AddMedicalRecordIdToExam';
 
 export const getDatabaseConfig = (): TypeOrmModuleOptions => {
   const isProduction = process.env.NODE_ENV === 'production';
@@ -22,6 +24,11 @@ export const getDatabaseConfig = (): TypeOrmModuleOptions => {
       password: process.env.MYSQLPASSWORD,
       database: process.env.MYSQLDATABASE,
       entities: [User, Tutor, Animal, Schedule, MedicalRecord, Procedure, Exam],
+      migrations: [
+        AddMustChangePasswordColumn1704067200000,
+        AddMedicalRecordIdToExam1704067300000
+      ],
+      migrationsRun: true, // Run migrations automatically
       synchronize: false, // Never use synchronize in production
       logging: false,
       ssl: {

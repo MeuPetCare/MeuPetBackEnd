@@ -13,7 +13,6 @@ services:
       - "3306:3306"
     volumes:
       - db_data_dev:/var/lib/mysql
-      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     networks:
       - meupet-network
     healthcheck:

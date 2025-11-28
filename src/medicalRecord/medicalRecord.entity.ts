@@ -10,6 +10,7 @@ import {
 import { Schedule } from '../schedule/schedule.entity';
 import { User } from '../user/user.entity';
 import { Procedure } from '../procedure/procedure.entity';
+import { Exam } from '../exam/exam.entity';
 
 @Entity()
 export class MedicalRecord {
@@ -41,6 +42,9 @@ export class MedicalRecord {
 
   @OneToMany(() => Procedure, (procedure) => procedure.medicalRecord)
   procedures: Procedure[];
+
+  @OneToMany(() => Exam, (exam) => exam.medicalRecord)
+  exams: Exam[];
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   dateMedicalRecord: Date;

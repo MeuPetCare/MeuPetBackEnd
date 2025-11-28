@@ -1,0 +1,80 @@
+erDiagram
+    USER {
+        int id PK "PRIMARY KEY AUTO_INCREMENT"
+        varchar(255) email UK "UNIQUE NOT NULL"
+        varchar(255) passwordHash "NOT NULL"
+        varchar(255) fullName "NOT NULL"
+        varchar(20) phone "NULLABLE"
+        varchar(50) crmv UK "UNIQUE, NULLABLE"
+        varchar(100) specialty "NULLABLE"
+        json roles "NOT NULL"
+        boolean isActive "DEFAULT TRUE"
+    }
+
+    TUTOR {
+        int id PK "PRIMARY KEY AUTO_INCREMENT"
+        varchar(100) name "NOT NULL"
+        varchar(20) telephone "NULLABLE"
+        varchar(100) email UK "UNIQUE NOT NULL"
+        varchar(14) cpf UK "UNIQUE NOT NULL"
+        varchar(255) address "NULLABLE"
+    }
+
+    ANIMAL {
+        int id PK "PRIMARY KEY AUTO_INCREMENT"
+        varchar(100) name "NOT NULL"
+        varchar(50) species "NOT NULL"
+        varchar(50) breed "NOT NULL"
+        date birthDate "NOT NULL"
+        decimal weight "NULLABLE PRECISION(5,2)"
+        varchar(10) gender "NULLABLE"
+        int tutorId FK "NOT NULL, FOREIGN KEY"
+    }
+
+    SCHEDULE {
+        int id PK "PRIMARY KEY AUTO_INCREMENT"
+        datetime dateHour "NOT NULL"
+        text reason "NOT NULL"
+        varchar(50) status "DEFAULT Agendada"
+        int animalId FK "NOT NULL, FOREIGN KEY"
+        int veterinarianId FK "NOT NULL, FOREIGN KEY"
+    }
+
+    MEDICAL_RECORD {
+        int id PK "PRIMARY KEY AUTO_INCREMENT"
+        int scheduleId FK "UNIQUE NOT NULL, FOREIGN KEY"
+        text anamnesis "NOT NULL"
+        text diagnosis "NOT NULL"
+        text treatment "NOT NULL"
+        int veterinarianId FK "NOT NULL, FOREIGN KEY"
+        timestamp dateMedicalRecord "DEFAULT CURRENT_TIMESTAMP"
+    }
+
+    PROCEDURE {
+        int id PK "PRIMARY KEY AUTO_INCREMENT"
+        varchar(100) name "NOT NULL"
+        text observations "NULLABLE"
+        decimal cost "NULLABLE PRECISION(10,2)"
+        int medicalRecordId FK "NOT NULL, FOREIGN KEY"
+    }
+
+    EXAM {
+        int id PK "PRIMARY KEY AUTO_INCREMENT"
+        varchar(100) name "NOT NULL"
+        date requestDate "NOT NULL"
+        date resultDate "NULLABLE"
+        varchar(50) status "DEFAULT Solicitado"
+        text result "NULLABLE"
+        varchar(255) resultUrlUrl "NULLABLE"
+        int animalId FK "NOT NULL, FOREIGN KEY"
+        int veterinarianId FK "NOT NULL, FOREIGN KEY"
+    }
+
+    TUTOR ||--o{ ANIMAL : "owns"
+    USER ||--o{ SCHEDULE : "attends_as_veterinarian"
+    ANIMAL ||--o{ SCHEDULE : "has_appointments"
+    SCHEDULE ||--|| MEDICAL_RECORD : "generates"
+    USER ||--o{ MEDICAL_RECORD : "creates"
+    MEDICAL_RECORD ||--o{ PROCEDURE : "includes"
+    ANIMAL ||--o{ EXAM : "undergoes"
+    USER ||--o{ EXAM : "requests"

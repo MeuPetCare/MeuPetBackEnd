@@ -23,13 +23,27 @@ export class ProcedureService {
   }
 
   async findAll(): Promise<Procedure[]> {
-    return this.procedureRepository.find({ relations: ['medicalRecord'] });
+    return this.procedureRepository.find({ 
+      relations: [
+        'medicalRecord',
+        'medicalRecord.schedule',
+        'medicalRecord.schedule.animal',
+        'medicalRecord.schedule.animal.tutor',
+        'medicalRecord.veterinarian'
+      ]
+    });
   }
 
   async findOne(id: number): Promise<Procedure> {
     const procedure = await this.procedureRepository.findOne({
       where: { id },
-      relations: ['medicalRecord'],
+      relations: [
+        'medicalRecord',
+        'medicalRecord.schedule',
+        'medicalRecord.schedule.animal',
+        'medicalRecord.schedule.animal.tutor',
+        'medicalRecord.veterinarian'
+      ],
     });
     if (!procedure) {
       throw new NotFoundException(`Procedure com ID ${id} não encontrado.`);

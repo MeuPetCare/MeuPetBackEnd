@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString, IsOptional, IsDateString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateExamDto {
@@ -11,11 +11,13 @@ export class CreateExamDto {
   name: string;
 
   @ApiProperty({
-    description: 'Data de solicitação do exame',
+    description: 'Data de solicitação do exame (opcional, usa data atual se não informada)',
     example: '2025-02-10',
+    required: false,
   })
-  @IsNotEmpty({ message: 'A data de solicitação é obrigatória.' })
-  requestDate: Date;
+  @IsOptional()
+  @IsDateString({}, { message: 'A data deve estar no formato correto (YYYY-MM-DD).' })
+  requestDate?: string;
 
   @ApiProperty({
     description: 'ID do animal',
@@ -32,4 +34,13 @@ export class CreateExamDto {
   @IsNotEmpty({ message: 'O ID do veterinário é obrigatório.' })
   @IsNumber({}, { message: 'O ID do veterinário deve ser um número.' })
   veterinarianId: number;
+
+  @ApiProperty({
+    description: 'ID do prontuário médico (opcional)',
+    example: 5,
+    required: false,
+  })
+  @IsOptional()
+  @IsNumber({}, { message: 'O ID do prontuário deve ser um número.' })
+  medicalRecordId?: number;
 }

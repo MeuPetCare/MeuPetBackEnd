@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { Animal } from '../animal/animal.entity';
 import { User } from '../user/user.entity';
+import { MedicalRecord } from '../medicalRecord/medicalRecord.entity';
 
 @Entity()
 export class Exam {
@@ -44,4 +45,11 @@ export class Exam {
 
   @Column()
   veterinarianId: number;
+
+  @ManyToOne(() => MedicalRecord, (medicalRecord) => medicalRecord.exams, { nullable: true })
+  @JoinColumn({ name: 'medicalRecordId' })
+  medicalRecord: MedicalRecord;
+
+  @Column({ nullable: true })
+  medicalRecordId: number;
 }

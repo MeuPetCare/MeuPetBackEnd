@@ -22,7 +22,10 @@ export class TutorService {
   }
 
   async findOne(id: number): Promise<Tutor> {
-    const tutor = await this.tutorRepository.findOne({ where: { id } });
+    const tutor = await this.tutorRepository.findOne({ 
+      where: { id },
+      relations: ['animal'] // Inclui a lista de animais associados
+    });
     if (!tutor) {
       throw new NotFoundException(`Tutor com ID ${id} não encontrado.`);
     }

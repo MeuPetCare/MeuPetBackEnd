@@ -69,14 +69,28 @@ export class MedicalRecordService {
 
   async findAll(): Promise<MedicalRecord[]> {
     return this.medicalRecordRepository.find({
-      relations: ['schedule', 'veterinarian'],
+      relations: [
+        'schedule', 
+        'schedule.animal', 
+        'schedule.animal.tutor', 
+        'veterinarian',
+        'procedures',
+        'exams'
+      ],
     });
   }
 
   async findOne(id: number): Promise<MedicalRecord> {
     const medicalRecord = await this.medicalRecordRepository.findOne({
       where: { id },
-      relations: ['schedule', 'veterinarian'],
+      relations: [
+        'schedule', 
+        'schedule.animal', 
+        'schedule.animal.tutor', 
+        'veterinarian',
+        'procedures',
+        'exams'
+      ],
     });
     if (!medicalRecord) {
       throw new NotFoundException(`MedicalRecord com ID ${id} não encontrado.`);

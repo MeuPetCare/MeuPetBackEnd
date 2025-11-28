@@ -13,6 +13,8 @@
     "start:debug": "NODE_ENV=development nest start --debug --watch",
     "start:prod": "NODE_ENV=production node dist/main",
     "start:railway": "npm run start:prod",
+    "migration:run": "npx typeorm migration:run -d src/config/database.config.ts",
+    "migration:revert": "npx typeorm migration:revert -d src/config/database.config.ts",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "NODE_ENV=test jest",
     "test:watch": "NODE_ENV=test jest --watch",

@@ -2,16 +2,17 @@
 import { IsNotEmpty, IsString, IsEmail, IsOptional } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
+/**
+ * DTO para criação de veterinário
+ * Nota: A senha será definida automaticamente como 'MeuPet2025!' 
+ * e o veterinário deve alterá-la no primeiro login
+ */
 export class CreateVeterinarianDto {
   @ApiProperty({ example: 'vet@email.com' })
   @IsEmail()
   @IsNotEmpty()
   email: string;
 
-  @ApiProperty({ example: 'senha123' })
-  @IsString()
-  @IsNotEmpty()
-  password: string;
 
   @ApiProperty({ example: 'Carlos Oliveira' })
   @IsString()
