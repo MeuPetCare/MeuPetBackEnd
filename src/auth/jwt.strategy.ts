@@ -31,7 +31,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
     // Regular user token
     const user = {
-      userId: payload.sub,
+      id: payload.sub,
       email: payload.email,
       roles: payload.roles,
     };
