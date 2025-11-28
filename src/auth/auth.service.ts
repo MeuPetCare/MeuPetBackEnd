@@ -41,4 +41,32 @@ export class AuthService {
       access_token: this.jwtService.sign(payload),
     };
   }
+
+  createServiceToken(
+    serviceName: string,
+    scopes: string[] = [],
+    expiresIn: number = 86400, // 1 day default
+    description?: string,
+  ) {
+    const payload = {
+      serviceName,
+      type: 'service',
+      scopes,
+      description,
+      iat: Math.floor(Date.now() / 1000),
+    };
+
+    const token = this.jwtService.sign(payload, {
+      expiresIn: `${expiresIn}s`,
+    });
+
+    return {
+      access_token: token,
+      token_type: 'Bearer',
+      expires_in: expiresIn,
+      service_name: serviceName,
+      scopes,
+      description,
+    };
+  }
 }

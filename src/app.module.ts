@@ -1,15 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { User } from './user/user.entity';
-import { Tutor } from './tutor/tutor.entity';
-import { Animal } from './animal/animal.entity';
-import { Schedule } from './schedule/schedule.entity';
-import { MedicalRecord } from './medicalRecord/medicalRecord.entity';
-import { Procedure } from './procedure/procedure.entity';
-import { Exam } from './exam/exam.entity';
 import { UserModule } from './user/user.module';
 import { TutorModule } from './tutor/tutor.module';
 import { AnimalModule } from './animal/animal.module';
@@ -17,19 +11,18 @@ import { ScheduleModule } from './schedule/schedule.module';
 import { MedicalRecordModule } from './medicalRecord/medicalRecord.module';
 import { ProcedureModule } from './procedure/procedure.module';
 import { ExamModule } from './exam/exam.module';
+import { getDatabaseConfig } from './config/database.config';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: process.env.MYSQLHOST,
-      port: parseInt(process.env.MYSQLPORT || '3306', 10),
-      username: process.env.MYSQLUSER,
-      password: process.env.MYSQLPASSWORD,
-      database: process.env.MYSQLDATABASE,
-      entities: [User, Tutor, Animal, Schedule, MedicalRecord, Procedure, Exam],
-      synchronize: true, //como é um projeto de estudo, manter true para facilitar o desenvolvimento
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: [
+        `.env.${process.env.NODE_ENV || 'development'}`,
+        '.env',
+      ],
     }),
+    TypeOrmModule.forRoot(getDatabaseConfig()),
     AuthModule,
     TutorModule,
     AnimalModule,

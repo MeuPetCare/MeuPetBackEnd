@@ -1,0 +1,23 @@
+# Development Dockerfile
+FROM node:20-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install all dependencies (including dev dependencies)
+RUN npm install
+
+# Copy source code
+COPY . .
+
+# Expose the port and debug port
+EXPOSE 3000 9229
+
+# Set environment
+ENV NODE_ENV=development
+
+# Start the application in development mode
+CMD ["npm", "run", "start:dev"]

@@ -16,6 +16,20 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   validate(payload: any) {
     console.log('🎫 JWT Payload recebido:', payload);
 
+    // Check if it's a service token
+    if (payload.type === 'service') {
+      const service = {
+        type: 'service',
+        serviceName: payload.serviceName,
+        scopes: payload.scopes || [],
+        description: payload.description,
+        issuedAt: payload.iat,
+      };
+      console.log('🔧 Service token validated:', service);
+      return service;
+    }
+
+    // Regular user token
     const user = {
       userId: payload.sub,
       email: payload.email,
