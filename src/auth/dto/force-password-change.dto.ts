@@ -1,7 +1,14 @@
-import { IsString, MinLength, MaxLength } from 'class-validator';
+import { IsString, MinLength, MaxLength, IsEmail } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ForcePasswordChangeDto {
+  @ApiProperty({
+    description: 'Email do usuário que está alterando a senha',
+    example: 'admin@meupet.com',
+  })
+  @IsEmail({}, { message: 'Email deve ter um formato válido' })
+  email: string;
+
   @ApiProperty({
     description: 'Senha atual do usuário',
     example: 'MeuPet2025!',

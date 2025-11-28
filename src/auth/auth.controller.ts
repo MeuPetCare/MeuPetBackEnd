@@ -153,7 +153,10 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Force password change for users with mustChangePassword flag' })
+  @ApiOperation({ 
+    summary: 'Force password change for users with mustChangePassword flag',
+    description: 'Allows users to change their password when mustChangePassword is true. Validates that the email in the request matches the authenticated user for security.'
+  })
   @ApiBody({ type: ForcePasswordChangeDto })
   @ApiResponse({
     status: 200,
@@ -178,6 +181,14 @@ export class AuthController {
         },
       },
     },
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - Invalid credentials or email mismatch',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request - Invalid current password, same password, or user does not need to change password',
   })
   @Post('force-password-change')
   @SkipPasswordCheck()

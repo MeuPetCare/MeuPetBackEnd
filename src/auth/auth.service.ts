@@ -88,12 +88,28 @@ export class AuthService {
     userId: number,
     dto: ForcePasswordChangeDto,
   ): Promise<{ message: string; user: Omit<User, 'passwordHash'> }> {
-    const user = await this.userService.findByEmail(
-      (await this.userService.findOneById(userId)).email,
-    );
-
-    if (!user) {
+    // Busca o usuário autenticado pelo ID do token
+    const authenticatedUser = await this.userService.findOneById(userId);
+    
+    if (!authenticatedUser) {
       throw new UnauthorizedException('Usuário não encontrado');
+    }
+
+    // Validação de segurança: verifica se o email no DTO corresponde ao usuário autenticado
+    if (authenticatedUser.email !== dto.email) {
+      throw new UnauthorizedException('Email informado não corresponde ao usuário autenticado');
+    }
+
+    // Busca o usuário completo com senha para validação
+    const user = await this.userService.findByEmail(dto.email);
+
+    if (!user || !user.passwordHash) {
+      throw new UnauthorizedException('Usuário não encontrado ou senha não definida');
+    }
+
+    // Verifica se o usuário precisa alterar a senha obrigatoriamente
+    if (!user.mustChangePassword) {
+      throw new BadRequestException('Este usuário não precisa alterar a senha obrigatoriamente');
     }
 
     // Verifica se a senha atual está correta
@@ -104,6 +120,12 @@ export class AuthService {
 
     if (!isCurrentPasswordValid) {
       throw new BadRequestException('Senha atual incorreta');
+    }
+
+    // Verifica se a nova senha é diferente da atual
+    const isSamePassword = await bcrypt.compare(dto.newPassword, user.passwordHash);
+    if (isSamePassword) {
+      throw new BadRequestException('A nova senha deve ser diferente da senha atual');
     }
 
     // Gera hash da nova senha
