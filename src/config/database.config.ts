@@ -37,9 +37,6 @@ export const getDatabaseConfig = (): TypeOrmModuleOptions => {
 
   // Local Development Configuration
   if (!isProduction) {
-    // Check if using Docker Compose
-    const isDockerCompose = process.env.DATABASE_HOST === 'db';
-
     return {
       type: 'mysql',
       host: process.env.DATABASE_HOST || 'localhost',

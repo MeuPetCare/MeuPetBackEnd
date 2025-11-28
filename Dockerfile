@@ -7,14 +7,14 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install all dependencies (needed for build)
+# Install all dependencies including devDependencies (needed for build)
 RUN npm ci && npm cache clean --force
 
 # Copy source code
 COPY . .
 
-# Build the application
-RUN npm run build
+# Build the application using npx to ensure nest CLI is available
+RUN npx nest build
 
 # Production stage
 FROM node:20-alpine AS production
@@ -54,5 +54,5 @@ ENV NODE_ENV=production
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD node dist/healthcheck.js || exit 1
 
-# Start the application
-CMD ["npm", "run", "start:prod"]
+# Start the application directly
+CMD ["node", "dist/main"]

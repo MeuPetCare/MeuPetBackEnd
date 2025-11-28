@@ -1,10 +1,23 @@
-import { Controller, Post, Request, UseGuards, Get, Body } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Request,
+  UseGuards,
+  Get,
+  Body,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { RolesGuard } from './roles.guard';
 import { Roles } from './roles.decorator';
-import { ApiBody, ApiBearerAuth, ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiBearerAuth,
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { LoginDto } from './dto/login.dto';
 import { CreateServiceTokenDto } from './dto/create-service-token.dto';
 
@@ -57,18 +70,29 @@ export class AuthController {
     schema: {
       type: 'object',
       properties: {
-        access_token: { type: 'string', description: 'JWT token for the service' },
+        access_token: {
+          type: 'string',
+          description: 'JWT token for the service',
+        },
         token_type: { type: 'string', example: 'Bearer' },
-        expires_in: { type: 'number', description: 'Token expiration time in seconds' },
+        expires_in: {
+          type: 'number',
+          description: 'Token expiration time in seconds',
+        },
         service_name: { type: 'string', description: 'Name of the service' },
-        scopes: { type: 'array', items: { type: 'string' }, description: 'Service permissions' },
+        scopes: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'Service permissions',
+        },
         description: { type: 'string', description: 'Service description' },
       },
     },
   })
   @Post('service-token')
   createServiceToken(@Body() createServiceTokenDto: CreateServiceTokenDto) {
-    const { serviceName, scopes, expiresIn, description } = createServiceTokenDto;
+    const { serviceName, scopes, expiresIn, description } =
+      createServiceTokenDto;
     return this.authService.createServiceToken(
       serviceName,
       scopes,
